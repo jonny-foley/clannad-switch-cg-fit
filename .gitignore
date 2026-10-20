@@ -1,0 +1,17 @@
+# Never commit game data or dumps
+main
+main.npdm
+*.nso
+*.nca
+*.nsp
+*.xci
+*.PAK
+*.pak
+*.bin
+prod.keys
+title.keys
+*.keys
+
+# Python
+__pycache__/
+*.pyc
