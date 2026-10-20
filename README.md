@@ -19,8 +19,8 @@ Backgrounds, sprites and the 16:9 CGs are left as they are.
 
 ## Install
 
-1. Download this repository (green **Code** button → **Download ZIP**) and extract it.
-2. Copy the `atmosphere` folder to the root of your SD card, merging it with the folder already there. You should end up with:
+1. Download `clannad-cg-fit-v1.0.zip` from the [latest release](https://github.com/jonny-foley/clannad-switch-cg-fit/releases/latest).
+2. Extract it to the root of your SD card, merging its `atmosphere` folder with the one already there. You should end up with:
    ```
    sd:/atmosphere/exefs_patches/clannad_cg_fit/BDF5162CD1682C0941137CF0A5A456DD00000000.ips
    ```
@@ -30,7 +30,7 @@ To uninstall, delete `sd:/atmosphere/exefs_patches/clannad_cg_fit/`. Atmosphere 
 
 ### Lighter alternative
 
-`alternatives/scroll_only/` holds a smaller patch. It only changes the CG gallery and the stick-scroll view, which open zoomed out to the full image; story CGs still start cropped until you tilt the stick. To use it, copy that `.ips` to the same SD card path instead of the main one.
+`alternatives/scroll_only/` in this repository holds a smaller patch. It only changes the CG gallery and the stick-scroll view, which open zoomed out to the full image; story CGs still start cropped until you tilt the stick. To use it, download that `.ips` file and put it at the same SD card path instead of the main one.
 
 ## What changes
 
