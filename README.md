@@ -1,6 +1,6 @@
 # CLANNAD (Switch) – event CGs in full 4:3
 
-An [Atmosphere](https://github.com/Atmosphere-NX/Atmosphere) exefs patch for **CLANNAD on Nintendo Switch** (title ID `010030E00F7C0800`, version **1.0.1**).
+An [Atmosphere](https://github.com/Atmosphere-NX/Atmosphere) exefs patch for **CLANNAD on Nintendo Switch** (title ID `010030E00F7C0000`, version **1.0.1**).
 
 The Switch release crops its 4:3 event CGs to fill a 16:9 screen, and the full image only shows if you scroll it with the stick. This patch shows them whole instead, in their original 4:3 framing with black bars at the sides:
 
@@ -19,7 +19,7 @@ Backgrounds, sprites and the 16:9 CGs are left as they are.
 
 ## Install
 
-1. Download `clannad-cg-fit-v1.0.zip` from the [latest release](https://github.com/jonny-foley/clannad-switch-cg-fit/releases/latest).
+1. Download the `clannad-cg-fit-*.zip` file from the [latest release](https://github.com/jonny-foley/clannad-switch-cg-fit/releases/latest).
 2. Extract it to the root of your SD card, merging its `atmosphere` folder with the one already there. You should end up with:
    ```
    sd:/atmosphere/exefs_patches/clannad_cg_fit/BDF5162CD1682C0941137CF0A5A456DD00000000.ips
@@ -27,6 +27,10 @@ Backgrounds, sprites and the 16:9 CGs are left as they are.
 3. Boot into Atmosphere and start the game.
 
 To uninstall, delete `sd:/atmosphere/exefs_patches/clannad_cg_fit/`. Atmosphere applies the patch in memory each time the game starts, so no game files are modified.
+
+### Yuzu and other emulators
+
+Put the same `.ips` file at `load/010030E00F7C0000/clannad_cg_fit/exefs/BDF5162CD1682C0941137CF0A5A456DD00000000.ips` in the emulator's user folder. In Yuzu, right-click the game and choose **Open Mod Data Location**. The game must be on update 1.0.1.
 
 ### Lighter alternative
 
@@ -53,16 +57,16 @@ The patch adds a small routine in the unused padding after the game's code (`mai
 | Site (`main+`) | Change |
 |---|---|
 | `0x19d2e0` | New code. `is_fit_cg` decides whether an image is a 4:3 event CG; `fit_image` fits it, using the engine's own transform setter. |
-| `0x19d680` | A bitmap of the 147 fitted CG IDs in `EVENTCG.PAK`. Backgrounds (IDs 1018–1360) are excluded, and so are small expression overlays. |
+| `0x19d800` | A bitmap of the 188 fitted IDs in `EVENTCG.PAK`: the 147 full-size 4:3 CGs, plus the 41 expression parts drawn on top of one of them. Backgrounds (IDs 1018–1360) are excluded. |
 | `0x100d88` | The CG scroller starts fitted CGs fully zoomed out (`z = −1`). |
 | `0x1794fc`, `0x17992c` | When the story shows a CG, it's fitted straight away. |
 | `0x103c1c`, `0x104658` | When the stick-scroll view closes, the CG is fitted again and keeps its position. |
 | `0x103894`, `0x1038e4`, `0x1038fc` | The scroll view's "zoom back in" animation is skipped in the story. |
 | `0x1a690` | The per-CG camera table returns neutral focus points for fitted CGs. |
 | `0x94fa0`, `0x95bf0` | The engine's "place image" and "move image" helpers keep fitted CGs at position (0, 0), which disables the port's pans. |
-| `0x34ce4` | Safety net in the per-frame draw-position calculation: a fitted CG's position and crop term is held at 0, while shakes and screen-wide effects still apply. |
+| `0x3a1d0`, `0x39e50` | The per-image move driver: any move armed on a fitted CG gets a target of (0, 0). Some of the port's pans re-arm a move every frame (for example on FGKT01A just before its cross-fade), and this stops them at the source. |
 
-Fitted CGs are tagged with an invisible marker in the low bits of their scale (about 0.002%), so the gallery's own zoom is never affected. Loading a new image into the same slot resets its transform, so a fitted CG can't leave a shrunken background behind. Expression overlays inherit the CG's transform, so they stay aligned.
+`fit_image` tags each CG it fits with an invisible marker in the low bits of its scale (about 0.002%), and the move-driver hooks only act on tagged images, so the gallery's own zoom and expression parts are never affected. Loading a new image into the same slot resets its transform, so a fitted CG can't leave a shrunken background behind. Expression parts inherit the CG's transform and position every frame, so they stay aligned with it.
 
 ## Building the patch yourself
 
@@ -79,7 +83,7 @@ It also writes IPSwitch-style `.pchtxt` files listing the same patches.
 
 ## Status
 
-Tested on a Switch OLED with Atmosphere and CLANNAD 1.0.1, checked across several CG scenes. If you find a CG that's mis-framed or mis-aligned, please open an issue and include the scene or CG.
+Tested on a Switch OLED with Atmosphere and CLANNAD 1.0.1 across several CG scenes. The fixes for expression overlays and the FGKT01A pan were checked in Yuzu with a debugger attached. If you find a CG that's mis-framed or mis-aligned, please open an issue and include the scene or CG.
 
 ## License
 
